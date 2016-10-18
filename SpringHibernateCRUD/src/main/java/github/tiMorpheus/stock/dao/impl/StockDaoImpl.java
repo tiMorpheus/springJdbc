@@ -1,13 +1,16 @@
 package github.tiMorpheus.stock.dao.impl;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import github.tiMorpheus.util.CustomHibernateDaoSupport;
+
 import java.util.*;
 
 import github.tiMorpheus.stock.dao.StockDao;
 import github.tiMorpheus.stock.model.Stock;
+import org.springframework.stereotype.Repository;
 
 
-public class StockDaoImpl extends HibernateDaoSupport implements StockDao{
+@Repository("stockDao")
+public class StockDaoImpl extends CustomHibernateDaoSupport implements StockDao{
 
     public void save(Stock stock) {
         getHibernateTemplate().save(stock);

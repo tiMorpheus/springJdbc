@@ -3,9 +3,13 @@ package github.tiMorpheus.stock.bo.impl;
 import github.tiMorpheus.stock.bo.StockBo;
 import github.tiMorpheus.stock.dao.StockDao;
 import github.tiMorpheus.stock.model.Stock;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("stockBo")
 public class StockBoImpl implements StockBo {
 
+    @Autowired
     StockDao stockDao;
 
     public void setStockDao(StockDao stockDao) {

@@ -8,9 +8,9 @@
     <artifactId>SpringHibernateCRUD</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
-
     <dependencies>
+
+        <!-- JUnit testing framework -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -41,11 +41,29 @@
 
         <!-- Hibernate framework -->
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-            <version>3.2.3.ga</version>
+            <groupId>hibernate</groupId>
+            <artifactId>hibernate3</artifactId>
+            <version>3.2.3.GA</version>
         </dependency>
 
+        <!-- Hibernate annotation -->
+        <dependency>
+            <groupId>hibernate-annotations</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.3.0.GA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>hibernate-commons-annotations</groupId>
+            <artifactId>hibernate-commons-annotations</artifactId>
+            <version>3.0.0.GA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>4.3.8.Final</version>
+        </dependency>
 
         <!-- Hibernate library dependecy start -->
         <dependency>
@@ -74,10 +92,11 @@
         <!-- Hibernate library dependecy end -->
 
         <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-            <version>1.1</version>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
         </dependency>
+
     </dependencies>
 
 </project>
