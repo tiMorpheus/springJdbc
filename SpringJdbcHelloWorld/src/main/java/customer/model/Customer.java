@@ -12,6 +12,9 @@ public class Customer {
         this.age = age;
     }
 
+    public Customer() {
+    }
+
     public int getCustId() {
         return custId;
     }

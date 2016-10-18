@@ -2,6 +2,7 @@ package customer.dao.impl;
 
 import customer.dao.CustomerDao;
 import customer.model.Customer;
+import customer.model.CustomerRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
@@ -11,24 +12,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JdbcCustomerDao /*extends JdbcDaoSupport*/ implements CustomerDao {
-
-    private DataSource dataSource;
-    private JdbcTemplate jdbcTemplate;
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+public class JdbcCustomerDao extends JdbcDaoSupport implements CustomerDao {
 
     public void insert(Customer customer) {
 
         String sql = "INSERT INTO customer " +
                 "(cust_id, name, age) VALUES (?, ?, ?)";
 
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        getJdbcTemplate().update(sql, new Object[]{customer.getCustId(),
+            customer.getName(), customer.getAge()
+        });
+
+
+/*        jdbcTemplate = new JdbcTemplate(dataSource);
 
         jdbcTemplate.update(sql, new Object[]{ customer.getCustId(),
-        customer.getName(), customer.getAge()});
+        customer.getName(), customer.getAge()});*/
 
 
 /*        Connection connection = null;
@@ -59,32 +58,11 @@ public class JdbcCustomerDao /*extends JdbcDaoSupport*/ implements CustomerDao {
 
         String sql = "SELECT * FROM CUSTOMER WHERE CUST_ID = ?";
 
-        Connection conn = null;
 
-        try {
-            conn = dataSource.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, custId);
-            Customer customer = null;
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                customer = new Customer(
-                        rs.getInt("CUST_ID"),
-                        rs.getString("NAME"),
-                        rs.getInt("Age")
-                );
-            }
-            rs.close();
-            ps.close();
-            return customer;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {}
-            }
-        }
+        Customer customer = (Customer)getJdbcTemplate().queryForObject(
+                sql, new Object[] { custId }, new CustomerRowMapper());
+
+        return customer;
+
     }
 }
