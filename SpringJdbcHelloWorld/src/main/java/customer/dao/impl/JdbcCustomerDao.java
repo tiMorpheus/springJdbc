@@ -2,6 +2,8 @@ package customer.dao.impl;
 
 import customer.dao.CustomerDao;
 import customer.model.Customer;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -9,22 +11,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class JdbcCustomerDao implements CustomerDao {
+public class JdbcCustomerDao /*extends JdbcDaoSupport*/ implements CustomerDao {
 
     private DataSource dataSource;
+    private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-
 
     public void insert(Customer customer) {
 
         String sql = "INSERT INTO customer " +
                 "(cust_id, name, age) VALUES (?, ?, ?)";
 
-        Connection connection = null;
+        jdbcTemplate = new JdbcTemplate(dataSource);
+
+        jdbcTemplate.update(sql, new Object[]{ customer.getCustId(),
+        customer.getName(), customer.getAge()});
+
+
+/*        Connection connection = null;
 
         try{
             connection = dataSource.getConnection();
@@ -43,7 +50,7 @@ public class JdbcCustomerDao implements CustomerDao {
                     connection.close();
                 } catch (SQLException e) {}
             }
-        }
+        }*/
     }
 
 
