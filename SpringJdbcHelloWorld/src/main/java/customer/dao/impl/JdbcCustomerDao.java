@@ -3,16 +3,13 @@ package customer.dao.impl;
 import customer.dao.CustomerDao;
 import customer.model.Customer;
 import customer.model.CustomerRowMapper;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import java.util.*;
-import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 public class JdbcCustomerDao extends JdbcDaoSupport implements CustomerDao {
 
@@ -24,38 +21,7 @@ public class JdbcCustomerDao extends JdbcDaoSupport implements CustomerDao {
         getJdbcTemplate().update(sql, new Object[]{customer.getCustId(),
             customer.getName(), customer.getAge()
         });
-
-
-/*        jdbcTemplate = new JdbcTemplate(dataSource);
-
-        jdbcTemplate.update(sql, new Object[]{ customer.getCustId(),
-        customer.getName(), customer.getAge()});*/
-
-
-/*        Connection connection = null;
-
-        try{
-            connection = dataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, customer.getCustId());
-            ps.setString(2, customer.getName());
-            ps.setInt(3, customer.getAge());
-            ps.executeUpdate();
-            ps.close();
-
-        }catch (SQLException e){
-            throw new RuntimeException(e);
-        } finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                } catch (SQLException e) {}
-            }
-        }*/
     }
-
-
-
     public Customer findByCustomerId(int custId) {
 
         String sql = "SELECT * FROM CUSTOMER WHERE CUST_ID = ?";
@@ -127,5 +93,26 @@ public class JdbcCustomerDao extends JdbcDaoSupport implements CustomerDao {
 
         return customers;
     }
+
+    //insert batch example
+    public void insertBatch(final List<Customer> customers){
+
+        String sql = "INSERT INTO CUSTOMER " +
+                "(CUST_ID, NAME, AGE) VALUES (?, ?, ?)";
+
+        getJdbcTemplate().batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Customer customer = customers.get(i);
+                ps.setLong(1, customer.getCustId());
+                ps.setString(2, customer.getName());
+                ps.setInt(3, customer.getAge() );
+            }
+            public int getBatchSize() {
+                return customers.size();
+            }
+        });
+    }
+
 
 }

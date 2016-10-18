@@ -18,4 +18,6 @@ public interface CustomerDao {
     List<Customer> findAll2();
 
     String findCustomerNameById(int i);
+
+    void insertBatch(final List<Customer> customers);
 }
