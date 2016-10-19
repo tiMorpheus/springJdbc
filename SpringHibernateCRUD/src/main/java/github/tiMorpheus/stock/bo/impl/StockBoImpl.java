@@ -1,35 +1,35 @@
 package github.tiMorpheus.stock.bo.impl;
 
+import github.tiMorpheus.stock.bo.AbstractDao;
 import github.tiMorpheus.stock.bo.StockBo;
-import github.tiMorpheus.stock.dao.StockDao;
 import github.tiMorpheus.stock.model.Stock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.hibernate.Criteria;
+import org.hibernate.Query;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
-@Service("stockBo")
-public class StockBoImpl implements StockBo {
-
-    @Autowired
-    StockDao stockDao;
-
-    public void setStockDao(StockDao stockDao) {
-        this.stockDao = stockDao;
-    }
+@Repository("stockBo")
+public class StockBoImpl extends AbstractDao implements StockBo {
 
     public void save(Stock stock) {
-        stockDao.save(stock);
-
+        persist(stock);
     }
 
     public void update(Stock stock) {
-        stockDao.update(stock);
+        getSession().update(stock);
     }
 
     public void delete(Stock stock) {
-        stockDao.delete(stock);
+        Query query = getSession().createSQLQuery("delete from stock where stock_code = :stock_code");
+        query.setString("stock_code", stock.getStockCode());
+        query.executeUpdate();
     }
 
-    public Stock findByStockCode(String stockCode) {
-        return stockDao.findByStockCode(stockCode);
+    public Stock findByStockCode(String s) {
+        Criteria criteria = getSession().createCriteria(Stock.class);
+        criteria.add(Restrictions.eq("stock_code", s));
+        return (Stock) criteria.uniqueResult();
     }
+
+
 }
